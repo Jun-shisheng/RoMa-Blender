@@ -1,7 +1,8 @@
 *.egg-info*
 *.vscode*
 *__pycache__*
-vis*
+vis*/
+vis_*
 workspace*
 .venv
 .DS_Store
@@ -10,3 +11,17 @@ jobs/*
 *.pth
 wandb*
 results/*
+
+# IDE
+.idea/
+
+# Large rendered image datasets (600MB+)
+02_Data/rendered_images/
+
+# Large binary assets (regeneratable from scripts)
+02_Data/local_assets/
+04_TrainingData/roma_self_supervised_dataset/image_pairs/
+
+# Python cache
+*.pyc
+*.pyo

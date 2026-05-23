@@ -1,0 +1,7 @@
+case_id,img1_path,img2_path,mask_path,is_low_conf
+1,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_1_img1.png,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_1_img2.png,,False
+2,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_2_img1.png,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_2_img2.png,,False
+3,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_3_img1.png,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_3_img2.png,,False
+4,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_4_img1.png,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_4_img2.png,,False
+5,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_5_img1.png,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_5_img2.png,,False
+6,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_6_img1.png,E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\image_pairs\case_6_img2.png,,False

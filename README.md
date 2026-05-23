@@ -1,163 +1,113 @@
-# 
-<p align="center">
-  <h1 align="center"> <ins>RoMa</ins> 🏛️:<br> Robust Dense Feature Matching <br> ⭐CVPR 2024⭐</h1>
-  <p align="center">
-    <a href="https://scholar.google.com/citations?user=Ul-vMR0AAAAJ">Johan Edstedt</a>
-    ·
-    <a href="https://scholar.google.com/citations?user=HS2WuHkAAAAJ">Qiyu Sun</a>
-    ·
-    <a href="https://scholar.google.com/citations?user=FUE3Wd0AAAAJ">Georg Bökman</a>
-    ·
-    <a href="https://scholar.google.com/citations?user=6WRQpCQAAAAJ">Mårten Wadenbäck</a>
-    ·
-    <a href="https://scholar.google.com/citations?user=lkWfR08AAAAJ">Michael Felsberg</a>
-  </p>
-  <h2 align="center"><p>
-    <a href="https://arxiv.org/abs/2305.15404" align="center">Paper</a> | 
-    <a href="https://parskatt.github.io/RoMa" align="center">Project Page</a>
-  </p></h2>
-  <div align="center"></div>
-</p>
-<br/>
-<p align="center">
-    <img src="https://github.com/Parskatt/RoMa/assets/22053118/15d8fea7-aa6d-479f-8a93-350d950d006b" alt="example" width=80%>
-    <br>
-    <em>RoMa is the robust dense feature matcher capable of estimating pixel-dense warps and reliable certainties for almost any image pair.</em>
-</p>
+# Low-Confidence Region Optimization in Feature Matching Using Blender and RoMa
 
-## Setup/Install
-In your python environment (tested on Linux python 3.12), run:
+A comprehensive framework integrating **Blender synthetic scene generation**, **RoMa feature matching optimization**, and **low-confidence region detection & visualization**.
+
+---
+
+## Overview
+
+Feature matching is a cornerstone of computer vision, but low-confidence matches in complex regions—object edges, shadow boundaries, textureless surfaces—remain a critical challenge. This project presents a three-part framework:
+
+1. **Blender-Based Scene Generator** — Automated pipeline for generating large-scale visual sequences with controlled variations in illumination, camera viewpoint, and object layout.
+2. **Encoder-Optimized Matching Model** — A modified RoMa architecture replacing the original feature encoder with a VGG19-BN backbone to enhance local feature extraction in low-texture regions.
+3. **Low-Confidence Evaluation Toolkit** — Quantitative metrics and 3D visualization tools for identifying, quantifying, and analyzing unreliable correspondence regions.
+
+Experiments on 47 synthetic vehicle-view scenes demonstrate significant improvements in low-confidence region detection accuracy.
+
+---
+
+## Repository Structure
+
+```
+.
+├── 01_Blender_Scripts/          # Blender Python scripts for scene generation & visualization
+│   ├── scene_generator.py       # Automated 3D scene rendering with controlled variations
+│   ├── roma_matcher_blender.py  # RoMa feature matching integration within Blender
+│   └── visualize_fail_points.py # 3D visualization of low-confidence regions on mesh surfaces
+│
+├── 02_Data/                     # Experimental data
+│   ├── match_results/           # CSV matching reports
+│   └── fail_cases/              # Filtered failure cases (JSON + CSV)
+│
+├── 03_Python_Scripts/           # Training & evaluation pipeline
+│   ├── evaluate_roma.py         # Quantitative evaluation comparing baseline vs fine-tuned
+│   ├── train_roma.py            # VGG19-BN + FeatureCycleLoss self-supervised training
+│   ├── filter_fail_cases.py     # Failure case filtering
+│   ├── generate_dataset_from_raw.py  # Training dataset construction
+│   └── view_csv_report.py       # CSV matching report viewer & statistics
+│
+├── 04_TrainingData/             # Training artifacts
+│   ├── roma_self_supervised_dataset/  # Masks and metadata
+│   └── evaluation_report.csv    # Baseline vs fine-tuned comparison results
+│
+└── romatch/                     # Original RoMa library (forked from Parskatt/RoMa)
+```
+
+> Note: Large binary assets (rendered images, model checkpoints, Blender .blend files) are excluded via `.gitignore`. They can be regenerated using the provided scripts.
+
+---
+
+## Pipeline
+
+```
+Blender Scene Generator          RoMa Feature Matching          Evaluation & Visualization
+┌─────────────────────┐     ┌──────────────────────┐     ┌──────────────────────────┐
+│ 3D Vehicle Model    │     │ Regression Matcher   │     │ Low-Confidence Mask Gen  │
+│ Controlled Camera   │────▶│ VGG19-BN Encoder     │────▶│ Failure Case Filtering   │
+│ Illumination Vars   │     │ FeatureCycleLoss     │     │ 3D Surface Projection    │
+└─────────────────────┘     └──────────────────────┘     └──────────────────────────┘
+```
+
+---
+
+## Usage
+
+### Requirements
+
+- Blender 3.3.1+
+- Python 3.9+
+- PyTorch 1.12.1+
+- CUDA 11.6+
+- OpenCV 4.6.0+
+
+### Setup
+
 ```bash
-uv pip install -e .
+git clone https://github.com/Jun-shisheng/RoMa.git
+cd RoMa
+pip install -e .
 ```
-or 
+
+### Scene Generation
+
 ```bash
-uv sync
+blender --background --python 01_Blender_Scripts/scene_generator.py
 ```
-You can also install `romatch` directly as a package from PyPI by
+
+### Feature Matching & Analysis
+
 ```bash
-uv pip install romatch
+python 01_Blender_Scripts/roma_matcher_blender.py
 ```
-or 
+
+### Training the Optimized Model
+
 ```bash
-uv add romatch
+python 03_Python_Scripts/train_roma.py
 ```
 
-## Fused local correlation kernel
-Include the `--extra fused-local-corr` flag as:
+### Evaluation
+
 ```bash
-uv sync --extra fused-local-corr
-```
-or 
-```bash
-uv pip install romatch[fused-local-corr]
-```
-or
-```bash
-uv add romatch[fused-local-corr]
+python 03_Python_Scripts/evaluate_roma.py
 ```
 
+---
 
+## Built Upon
 
-## Demo / How to Use
-We provide two demos in the [demos folder](demo).
-Here's the gist of it:
-```python
-from romatch import roma_outdoor
-roma_model = roma_outdoor(device=device)
-# Match
-warp, certainty = roma_model.match(imA_path, imB_path, device=device)
-# Sample matches for estimation
-matches, certainty = roma_model.sample(warp, certainty)
-# Convert to pixel coordinates (RoMa produces matches in [-1,1]x[-1,1])
-kptsA, kptsB = roma_model.to_pixel_coordinates(matches, H_A, W_A, H_B, W_B)
-# Find a fundamental matrix (or anything else of interest)
-F, mask = cv2.findFundamentalMat(
-    kptsA.cpu().numpy(), kptsB.cpu().numpy(), ransacReprojThreshold=0.2, method=cv2.USAC_MAGSAC, confidence=0.999999, maxIters=10000
-)
-```
+This project builds on [RoMa](https://github.com/Parskatt/RoMa) (CVPR 2024) by Edstedt et al.
 
-**New**: You can also match arbitrary keypoints with RoMa. See [match_keypoints](romatch/models/matcher.py) in RegressionMatcher.
-
-## Settings
-
-### Resolution
-By default RoMa uses an initial resolution of (560,560) which is then upsampled to (864,864). 
-You can change this at construction (see roma_outdoor kwargs).
-You can also change this later, by changing the roma_model.w_resized, roma_model.h_resized, and roma_model.upsample_res.
-
-### Sampling
-roma_model.sample_thresh controls the thresholding used when sampling matches for estimation. In certain cases a lower or higher threshold may improve results.
-
-
-## Reproducing Results
-The experiments in the paper are provided in the [experiments folder](experiments).
-
-### Training
-1. First follow the instructions provided here: https://github.com/Parskatt/DKM for downloading and preprocessing datasets.
-2. Run the relevant experiment, e.g.,
-```bash
-torchrun --nproc_per_node=4 --nnodes=1 --rdzv_backend=c10d experiments/roma_outdoor.py
-```
-### Testing
-```bash
-python experiments/roma_outdoor.py --only_test --benchmark mega-1500
-```
-## License
-All our code except DINOv2 is MIT license.
-DINOv2 has an Apache 2 license [DINOv2](https://github.com/facebookresearch/dinov2/blob/main/LICENSE).
-
-## Acknowledgement
-Our codebase builds on the code in [DKM](https://github.com/Parskatt/DKM).
-
-## Tiny RoMa
-If you find that RoMa is too heavy, you might want to try Tiny RoMa which is built on top of XFeat.
-```python
-from romatch import tiny_roma_v1_outdoor
-tiny_roma_model = tiny_roma_v1_outdoor(device=device)
-```
-Mega1500:
-|  | AUC@5 | AUC@10 | AUC@20 |
-|----------|----------|----------|----------|
-| XFeat    | 46.4    | 58.9    | 69.2    |
-| XFeat*    |  51.9   | 67.2    | 78.9    |
-| Tiny RoMa v1    | 56.4 | 69.5 | 79.5     |
-| RoMa    |  -   | -    | -    |
-
-Mega-8-Scenes (See DKM):
-|  | AUC@5 | AUC@10 | AUC@20 |
-|----------|----------|----------|----------|
-| XFeat    | -    | -    | -    |
-| XFeat*    |  50.1   | 64.4    | 75.2    |
-| Tiny RoMa v1    | 57.7 | 70.5 | 79.6     |
-| RoMa    |  -   | -    | -    |
-
-IMC22 :'):
-|  | mAA@10 |
-|----------|----------|
-| XFeat    | 42.1    |
-| XFeat*    |  -   |
-| Tiny RoMa v1    | 42.2 |
-| RoMa    |  -   |
-
-## Reproducibility
-There are a few diffs in the current codebase compared to the original repo used to run experiments.
-
-1. The `scale_factor` used in the `match` method now is relative to the original training resolution of `560`. Previosly it was based on the set coarse resolution (which might or might not be `560`).
-2. Newer PyTorch, original code used something like `2.1`.
-3. Stochastic eval: both RANSAC and the chosen correspondences can affect results in `Mega1500`.
-4. Matrix inverse in GP has been replaced with cholesky decomp.
-
-That being said, if diff of results are $>0.5$ there probably is something wrong, please let me know.
-
-
-## BibTeX
-If you find our models useful, please consider citing our paper!
-```
-@article{edstedt2024roma,
-title={{RoMa: Robust Dense Feature Matching}},
-author={Edstedt, Johan and Sun, Qiyu and Bökman, Georg and Wadenbäck, Mårten and Felsberg, Michael},
-journal={IEEE Conference on Computer Vision and Pattern Recognition},
-year={2024}
-}
-```
+- Original RoMa code (except DINOv2): MIT License
+- DINOv2: Apache 2.0 License
+- Added research code: MIT License
