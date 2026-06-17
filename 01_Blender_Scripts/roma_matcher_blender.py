@@ -6,7 +6,7 @@ import glob
 from romatch import roma_outdoor
 
 # 核心路径配置
-ROOT_DIR = r"E:\Github project\RoMa"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RENDER_DIR = os.path.join(ROOT_DIR, "02_Data", "rendered_images", "car_scene")
 RESULT_DIR = os.path.join(ROOT_DIR, "02_Data", "match_results")
 FAIL_CASE_DIR = os.path.join(RESULT_DIR, "failure_cases")

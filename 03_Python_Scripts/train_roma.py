@@ -10,8 +10,9 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 
-# ================= 🔒 环境变量配置 =================
-WEIGHTS_DIR = r"E:\Github project\RoMa\weights"
+# ================= 环境变量配置 =================
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+WEIGHTS_DIR = os.path.join(ROOT_DIR, "weights")
 CACHE_DIR = os.path.join(WEIGHTS_DIR, "torch_cache")
 CHECKPOINTS_DIR = os.path.join(CACHE_DIR, "checkpoints")
 os.makedirs(WEIGHTS_DIR, exist_ok=True)
@@ -25,14 +26,14 @@ os.environ['HF_HUB_CACHE'] = CACHE_DIR
 os.environ['TRANSFORMERS_CACHE'] = CACHE_DIR
 os.environ['HUGGINGFACE_HUB_CACHE'] = CACHE_DIR
 print("=" * 70)
-print("🔒 所有缓存已强制重定向到 E 盘")
-print(f"📂 缓存根目录: {CACHE_DIR}")
+print("所有缓存已重定向到项目目录")
+print(f"缓存根目录: {CACHE_DIR}")
 print("=" * 70 + "\n")
 
 # ================= 全局配置 =================
-GENERATED_DATA_ROOT = r"E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset"
+GENERATED_DATA_ROOT = os.path.join(ROOT_DIR, "04_TrainingData", "roma_self_supervised_dataset")
 GENERATED_METADATA_PATH = os.path.join(GENERATED_DATA_ROOT, "metadata.csv")
-SAVE_PATH = r"E:\Github project\RoMa\04_TrainingData\finetuned_roma"
+SAVE_PATH = os.path.join(ROOT_DIR, "04_TrainingData", "finetuned_roma")
 os.makedirs(SAVE_PATH, exist_ok=True)
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"

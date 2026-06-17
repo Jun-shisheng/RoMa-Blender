@@ -5,7 +5,7 @@ import csv
 from typing import List, Dict
 
 # ============ 路径配置（与项目保持一致） ============
-ROOT_DIR = r"E:\Github project\RoMa"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPORT_PATH = os.path.join(
     ROOT_DIR, "02_Data", "match_results", "car_match_report_precise.csv"
 )

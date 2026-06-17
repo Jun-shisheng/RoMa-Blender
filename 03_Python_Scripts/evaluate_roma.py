@@ -11,15 +11,15 @@ import torch.nn as nn  # 修复未解析的nn引用
 from torchvision import models
 
 # ============ 全局配置（与训练脚本完全对齐） ============
-FINETUNED_MODEL_PATH = r"E:\Github project\RoMa\04_TrainingData\finetuned_roma\best_finetuned_roma.pth"
-RAW_METADATA_PATH = r"E:\Github project\RoMa\02_Data\match_results\car_match_report_precise.csv"
-OUTPUT_REPORT_PATH = r"E:\Github project\RoMa\04_TrainingData\evaluation_report.csv"
-RENDERED_IMAGES_DIR = r"E:\Github project\RoMa\02_Data\rendered_images\car_scene"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FINETUNED_MODEL_PATH = os.path.join(ROOT_DIR, "04_TrainingData", "finetuned_roma", "best_finetuned_roma.pth")
+RAW_METADATA_PATH = os.path.join(ROOT_DIR, "02_Data", "match_results", "car_match_report_precise.csv")
+OUTPUT_REPORT_PATH = os.path.join(ROOT_DIR, "04_TrainingData", "evaluation_report.csv")
+RENDERED_IMAGES_DIR = os.path.join(ROOT_DIR, "02_Data", "rendered_images", "car_scene")
 
 # ============ 核心修复：添加正确的romatch模块路径 ============
 import sys
-project_root = r"E:\Github project\RoMa"
-sys.path.append(project_root)
+sys.path.append(ROOT_DIR)
 try:
     from romatch.models.model_zoo.roma_models import RegressionMatcher
     from romatch.models.encoders import CNNandDinov2

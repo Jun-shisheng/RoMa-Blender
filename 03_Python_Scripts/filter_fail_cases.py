@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 # 配置参数（与集成方案一致）
-ROOT_DIR = r"E:\Github project\RoMa"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CSV_PATH = os.path.join(ROOT_DIR, "02_Data", "match_results", "car_match_report_precise.csv")
 FAIL_CASE_DIR = os.path.join(ROOT_DIR, "02_Data", "fail_cases")
 CONFIDENCE_THRESHOLD = 0.3  # 低置信阈值

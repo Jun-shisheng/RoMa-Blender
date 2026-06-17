@@ -5,9 +5,10 @@ import shutil
 from pathlib import Path
 
 # 配置路径（与项目目录完全匹配）
-RAW_METADATA_PATH = r"E:\Github project\RoMa\02_Data\match_results\car_match_report_precise.csv"
-RENDERED_IMAGES_DIR = r"E:\Github project\RoMa\02_Data\rendered_images\car_scene"
-GENERATED_DATA_ROOT = r"E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RAW_METADATA_PATH = os.path.join(ROOT_DIR, "02_Data", "match_results", "car_match_report_precise.csv")
+RENDERED_IMAGES_DIR = os.path.join(ROOT_DIR, "02_Data", "rendered_images", "car_scene")
+GENERATED_DATA_ROOT = os.path.join(ROOT_DIR, "04_TrainingData", "roma_self_supervised_dataset")
 IMAGE_PAIRS_DIR = os.path.join(GENERATED_DATA_ROOT, "image_pairs")
 MASKS_DIR = os.path.join(GENERATED_DATA_ROOT, "masks")
 GENERATED_METADATA_PATH = os.path.join(GENERATED_DATA_ROOT, "metadata.csv")

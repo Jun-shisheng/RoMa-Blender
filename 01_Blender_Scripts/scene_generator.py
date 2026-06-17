@@ -6,7 +6,7 @@ import traceback
 import gc
 
 # ============ 路径设置 ============
-ROOT_DIR = r"E:\Github project\RoMa"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT_DIR, "02_Data")
 RENDER_DIR = os.path.join(DATA_DIR, "rendered_images")
 BLENDER_PROJ_DIR = os.path.join(DATA_DIR, "blender_projects")

@@ -9,11 +9,10 @@ import numpy as np
 from mathutils import Vector, Matrix
 
 # ============ 全局配置（关键：统一掩码路径和命名） ============
-ROOT_DIR = r"E:\Github project\RoMa"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CSV_PATH = os.path.join(ROOT_DIR, "02_Data", "match_results", "car_match_report_precise.csv")
 IMAGE_DIR = os.path.join(ROOT_DIR, "02_Data", "rendered_images", "car_scene")
-# 掩码输出目录（与数据集生成脚本的MASKS_DIR完全一致）
-MASK_OUTPUT_DIR = r"E:\Github project\RoMa\04_TrainingData\roma_self_supervised_dataset\masks"
+MASK_OUTPUT_DIR = os.path.join(ROOT_DIR, "04_TrainingData", "roma_self_supervised_dataset", "masks")
 os.makedirs(MASK_OUTPUT_DIR, exist_ok=True)  # 确保目录存在
 
 LOW_CONF_THRESHOLD = 0.03  # 保持3%阈值，适配项目需求
